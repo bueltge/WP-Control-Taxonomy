@@ -1,3 +1,5 @@
+# WordPress-Control-Taxonomy
+Small controler class to create taxonomies in WordPress with different extensions
 
 ## How to use
 
