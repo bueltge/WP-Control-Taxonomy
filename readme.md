@@ -2,7 +2,7 @@
 Small controler class to create taxonomies in WordPress with different extensions
 
 ## How to use
-	
+```php
 	<?php
 	/**
 	 * Control Taxonomy Example
@@ -54,4 +54,4 @@ Small controler class to create taxonomies in WordPress with different extension
 		
 	} // end class
 	$issue_category = new Issue_Tracking_Taxonomy_Example;
-	
+```
