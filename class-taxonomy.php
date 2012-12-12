@@ -1,8 +1,9 @@
 <?php
 /**
- * Control Taxonomy for WordPress
+ * Easier control Taxonomy for WordPress
+ * 
  * @package  Wp_Control_Taxonomy
- * @version  0.0.1
+ * @version  12/12/2012  1.0.0
  * @author   Frank Bültge <frank@bueltge.de>
  */
 
@@ -50,12 +51,13 @@ class Wp_Control_Taxonomy {
 		// Register the taxonomy.
 		add_action( 'init', array( $this, 'register_taxonomy' ) );
 		
-		if ( $this -> taxonomy_column ) {
+		// add to admin column, only important before WP 3.5
+		if ( $this -> taxonomy_column && version_compare( $GLOBALS['wp_version'], '3.5', '<' ) ) {
 			// Add the taxonomy to the table columns.
 			add_action( 'manage_posts_custom_column', array( $this, 'manage_columns' ) );
 			
 			// Display the taxonomy in the table column.
-			add_filter( "manage_edit-{$this -> post_type}_columns", array( $this, 'manage_column_titles' ) );
+			add_filter( "manage_edit-{$this->post_type}_columns", array( $this, 'manage_column_titles' ) );
 		}
 	}
 	
@@ -69,7 +71,7 @@ class Wp_Control_Taxonomy {
 	 */
 	public function get_text_domain() {
 		
-		return parent :: get_textdomain();
+		return parent::get_textdomain();
 	}
 	
 	/**
@@ -86,11 +88,14 @@ class Wp_Control_Taxonomy {
 			$this -> taxonomy, 
 			array( $this -> post_type ), 
 			array(
-				'labels'                => apply_filters( "wpit_{$this -> taxonomy}_labels", $this -> taxonomy_labels ),
+				'labels'                => apply_filters(
+					"ct_{$this->taxonomy}_labels", $this->taxonomy_labels
+				),
 				'show_tagcloud'         => FALSE,
 				'show_ui'               => TRUE,
+				'show_admin_column'     => $this->taxonomy_column, // new since WP 3.5
 				'rewrite'               => array(
-					'slug' => $this -> taxonomy_slug
+					'slug' => $this->taxonomy_slug
 				),
 				'update_count_callback' => '_update_post_term_count'
 			) 
@@ -107,9 +112,9 @@ class Wp_Control_Taxonomy {
 	 */
 	function manage_column_titles( $columns ) {
 		
-		$taxonomy = get_taxonomy( $this -> taxonomy );
+		$taxonomy = get_taxonomy( $this->taxonomy );
 		
-		$columns[ $this -> taxonomy ] = $taxonomy -> labels -> singular_name;
+		$columns[ $this->taxonomy ] = $taxonomy->labels->singular_name;
 		
 		return $columns;
 	}
@@ -127,12 +132,12 @@ class Wp_Control_Taxonomy {
 		switch( $column ) {
 			case $this -> taxonomy :
 				
-				$tax = get_the_term_list( $GLOBALS['post'] -> ID, $this -> taxonomy, '', ', ', '' );
+				$tax = get_the_term_list( $GLOBALS['post']->ID, $this->taxonomy, '', ', ', '' );
 				
 				if ( ! empty( $tax ) )
 					echo $tax;
 				else 
-					_e( 'empty', $this -> get_text_domain() );
+					_e( 'empty', $this->get_text_domain() );
 				
 			break;
 		}
