@@ -3,7 +3,7 @@
  * Easier control Taxonomy for WordPress
  * 
  * @package  Wp_Control_Taxonomy
- * @version  12/12/2012  1.0.0
+ * @version  05/23/2013  1.0.1
  * @author   Frank Bültge <frank@bueltge.de>
  */
 
@@ -38,6 +38,9 @@ class Wp_Control_Taxonomy {
 	 * Create Taxonomy; define different variables and settings
 	 * Use Filter `wp_control_taxonomy_register_taxonomy` for change params via Plugin
 	 * 
+	 * See also http://codex.wordpress.org/Function_Reference/register_taxonomy#Arguments
+	 * for arguments
+	 * 
 	 * @since   0.0.1
 	 * @uses    wp_parse_args, apply_filters
 	 * @param   string $post_type, Name of Post_ID
@@ -56,6 +59,7 @@ class Wp_Control_Taxonomy {
 			'taxonomy_labels'                   => array(),
 			'taxonomy_column'                   => FALSE,
 			'taxonomy_hierarchical'             => FALSE,
+			'taxonomy_update_count_callback'    => '_update_generic_term_count',
 			'terms'                             => FALSE,
 			'taxonomy_custom_hierarchical'      => FALSE,
 			'taxonomy_custom_hierarchical_type' => FALSE
@@ -74,6 +78,7 @@ class Wp_Control_Taxonomy {
 		$this->taxonomy_labels                   = $args['taxonomy_labels'];
 		$this->taxonomy_column                   = $args['taxonomy_column'];
 		$this->taxonomy_hierarchical             = $args['taxonomy_hierarchical'];
+		$this->taxonomy_update_count_callback    = $args['taxonomy_update_count_callback'];
 		$this->taxonomy_terms                    = $args['terms'];
 		$this->taxonomy_custom_hierarchical      = $args['taxonomy_custom_hierarchical'];
 		$this->taxonomy_custom_hierarchical_type = $args['taxonomy_custom_hierarchical_type'];
@@ -129,6 +134,9 @@ class Wp_Control_Taxonomy {
 	/**
 	 * Register the taxonomy initially
 	 * 
+	 * See also http://codex.wordpress.org/Function_Reference/register_taxonomy#Arguments
+	 * for arguments, but the values get from contructor
+	 * 
 	 * @since   0.0.1
 	 * @uses    register_taxonomy, apply_filters
 	 * @param   
@@ -151,7 +159,7 @@ class Wp_Control_Taxonomy {
 				'rewrite'               => array(
 					'slug' => $this->taxonomy_slug
 				),
-				'update_count_callback' => '_update_post_term_count'
+				'update_count_callback' => $this->taxonomy_update_count_callback
 			) 
 		);
 	}
