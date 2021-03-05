@@ -5,6 +5,7 @@
  * @package  Wp_Control_Taxonomy
  * @version  05/23/2013  1.0.1
  * @author   Frank Bültge <frank@bueltge.de>
+ * @license  GPLv2+
  */
 
 // avoid direct calls to this file, because now WP core and framework has been used.
